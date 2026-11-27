@@ -42,12 +42,13 @@
 <div id="lose" class="scr hide">
  <div class="ttl" style="color:var(--hp)">KAMU KALAH</div>
  <span class="badge">Progres tersimpan</span>
- <small>Gold dan item tetap aman</small>
+ <small>Gold dan item tetap aman · senjata selain Legend hilang</small>
  <div class="row"><button id="lnext" class="pri" style="min-width:200px">Lanjut dari Kota</button><button id="lmenu">Ke Menu</button></div>
 </div>
 
-<div id="ser" class="scr hide" style="justify-content:flex-end;padding-bottom:calc(40px*var(--s))">
+<div id="ser" class="scr hide" style="justify-content:center">
  <div class="pn ban">Terdaftar sebagai Petualang</div>
+ <div class="pn dlg" style="width:min(380px,100%)"><div class="ttl" style="font-size:max(14px,calc(16px*var(--s)))">LAPORAN PETUALANGAN</div><div id="rep"></div><button id="serOk" class="pri" style="min-width:200px">Lanjut</button></div>
 </div>
 
 <div id="clear" class="scr hide">
@@ -61,6 +62,7 @@
  <div class="hl">
   <div class="bar"><span>HP</span><div class="tr"><i id="hpf" style="background:var(--hp)"></i></div><span id="hpt">20/20</span></div>
   <div class="bar"><span>MP</span><div class="tr"><i style="width:100%;background:var(--mana)"></i></div><span>15/15</span></div>
+  <div class="bar"><span>Lv</span><span id="lvn">1</span><div class="tr sm"><i id="xpf" style="background:var(--ok)"></i></div></div>
  </div>
  <div id="boss" class="hide"><div style="font-size:max(14px,calc(16px*var(--s)));font-weight:600">Raja Goblin</div><div class="tr"><i id="bossf" style="background:var(--hp)"></i></div></div>
  <div class="hr">
@@ -72,6 +74,7 @@
  </div>
  <div id="toasts" style="position:absolute"></div>
  <div id="saveT">Progres tersimpan</div>
+ <button id="enter" class="pri hide"><span>Masuk</span><small>E</small></button>
  <div id="slot" class="pn"><img id="slotimg" alt=""></div>
  <div id="joy"><div id="knob"></div></div>
  <button class="bt" id="atk">Serang</button>
@@ -88,14 +91,7 @@
   <button disabled class="dash">Enchant · ditunda</button>
  </div>
  <div class="main"><div id="list"></div><div id="det" class="pn"></div></div>
- <div class="row sp" style="width:min(760px,100%)"><small>Setelah keluar gerbang, kamu tidak bisa kembali sebelum Boss kalah.</small><button id="close">Tutup</button></div>
-</div>
-
-<div id="gate" class="ov hide">
- <div class="pn dlg">
-  <p>Keluar kota?<br>Kamu tidak bisa kembali sebelum Boss kalah.</p>
-  <div class="row"><button id="gstay">Belanja Lagi</button><button id="ggo" class="pri">Masuk Hutan</button></div>
- </div>
+ <div class="row sp" style="width:min(760px,100%)"><small>Setelah masuk hutan, kamu tidak bisa kembali sebelum Boss kalah.</small><button id="close">Tutup</button></div>
 </div>
 
 <div id="pause" class="ov hide">
@@ -104,7 +100,7 @@
   <button id="resume" class="pri" style="width:100%">Lanjut</button>
   <button id="ptas" style="width:100%">Tas</button>
   <button id="pmenu" style="width:100%">Ke Menu</button>
-  <small>A/D gerak · Spasi/W lompat · J serang · 1 makan · 2 minum · Tab/I tas · Esc jeda</small>
+  <small>A/D gerak · Spasi/W lompat · J serang · 1 makan · 2 minum · E masuk pintu · Tab/I tas · Esc jeda</small>
  </div>
 </div>
 
@@ -121,7 +117,7 @@
   <div class="pn col gr">
    <div class="sr"><small>Senjata aktif</small><div id="wbox" class="pn" style="width:calc(52px*var(--s));height:calc(52px*var(--s));display:flex;align-items:center;justify-content:center;border-color:var(--c)"><img id="wimg" class="ic" style="width:calc(28px*var(--s));height:calc(28px*var(--s))" alt=""></div><div><div id="wnm"></div><span class="chip" id="wchip"></span></div></div>
    <div class="slots" id="slots"></div>
-   <small>18 slot · item bertumpuk · tombol Makan dan Minum di HUD memakai item pertama</small>
+   <small id="tcount"></small>
   </div>
   <div class="pn col det" id="det2"></div>
  </div>
@@ -134,6 +130,7 @@
  </div>
 </div>
 
+<div id="chest" class="ov hide"><div class="pn dlg" style="width:min(420px,100%)"><div class="ttl" style="font-size:max(14px,calc(16px*var(--s)))">PETI RAJA GOBLIN</div><div id="chestList" style="display:flex;flex-direction:column;gap:6px;width:100%;text-align:left"></div><button id="cclose" class="pri">Ambil</button></div></div>
 <div id="popup" class="hide"><img id="pimg" alt=""><div id="pnm"></div><div id="pchip"></div></div>
 
 <div id="rot" class="hide">

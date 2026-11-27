@@ -18,9 +18,8 @@ bind('#resume',closeOv);
 bind('#ptas',()=>{closeOv();openTas()});
 bind('#pmenu',()=>{closeOv();showMenu()});
 bind('#tclose',closeOv);
-$('#tas').addEventListener('click',e=>{const s=e.target.closest('.sl[data-id]');if(s){tasSel=s.dataset.id;renderTas();return}if(e.target.id==='pakai')pakai()});
-bind('#gstay',()=>{closeOv();P.x-=40});
-bind('#ggo',()=>{closeOv();loadTo('f0',16,1)});
+$('#tas').addEventListener('click',e=>{if(noClick)return;const s=e.target.closest('.sl[data-id]');if(s){tasSel=s.dataset.id;renderTas();return}if(e.target.id==='pakai')pakai()});
+bind('#enter',e=>{e.currentTarget.blur();enterDoor()});
 $('#shop').addEventListener('click',e=>{
  const t=e.target.closest('[data-tab],[data-id],#buy,#close');if(!t)return;
  if(t.dataset.tab){shopTab=t.dataset.tab;shopSel=null;renderShop()}
@@ -29,18 +28,60 @@ $('#shop').addEventListener('click',e=>{
 });
 $('#popup').addEventListener('click',closePop);
 
+bind('#cclose',closeOv);
+
+bind('#serOk',serOk);
+
 /* ---------- Keyboard ---------- */
 addEventListener('keydown',e=>{
  const k=e.key.toLowerCase();
  if(['arrowleft','arrowright','arrowup','arrowdown',' '].includes(k))e.preventDefault();
  KEY[k]=1;
  if(!e.repeat&&(k==='w'||k===' '||k==='arrowup')&&scn==='play'&&!ui&&!busy)jumpReq=true;
- if(k==='escape'){if(ui==='gate')closeOv(),P.x-=40;else if(ui)closeOv();else if(scn==='play'&&!busy)openOv('pause')}
+ if(k==='e'&&!e.repeat)enterDoor();
+ if(k==='escape'){if(ui)closeOv();else if(scn==='play'&&!busy)openOv('pause')}
  if(k==='tab'||k==='i'){e.preventDefault();if(ui==='tas')closeOv();else if(scn==='play'&&!ui&&!busy)openTas()}
  if(k==='1'&&scn==='play'&&!ui)eat();
  if(k==='2'&&scn==='play'&&!ui)drink();
 });
 addEventListener('keyup',e=>{KEY[e.key.toLowerCase()]=0});
+
+/* ---------- Seret item keluar Tas untuk membuang ---------- */
+let drag=null,noClick=false;
+const tasGrid=document.querySelector('#tas .gr');
+const outTas=(x,y)=>{const r=tasGrid.getBoundingClientRect();return x<r.left||x>r.right||y<r.top||y>r.bottom};
+function dragEnd(){
+ if(!drag)return;
+ drag.el.classList.remove('drg');tasGrid.classList.remove('out');
+ if(drag.ghost)drag.ghost.remove();
+ drag=null;
+}
+$('#slots').addEventListener('dragstart',e=>e.preventDefault());
+$('#slots').addEventListener('pointerdown',e=>{
+ const s=e.target.closest('.sl[data-id]');if(!s||(e.pointerType==='mouse'&&e.button!==0))return;
+ drag={id:s.dataset.id,x:e.clientX,y:e.clientY,on:false,el:s,pid:e.pointerId,ghost:null};
+});
+addEventListener('pointermove',e=>{
+ if(!drag||e.pointerId!==drag.pid)return;
+ if(!drag.on){
+  if(Math.hypot(e.clientX-drag.x,e.clientY-drag.y)<8)return;
+  drag.on=true;drag.el.classList.add('drg');
+  const gh=document.createElement('div');gh.className='ghost';gh.appendChild(drag.el.querySelector('img').cloneNode());
+  document.body.appendChild(gh);drag.ghost=gh;
+ }
+ drag.ghost.style.left=e.clientX+'px';drag.ghost.style.top=e.clientY+'px';
+ const out=outTas(e.clientX,e.clientY);
+ drag.ghost.classList.toggle('out',out);tasGrid.classList.toggle('out',out);
+ $('#tcount').textContent=out?'Lepaskan untuk membuang item':'Seret keluar dari tas untuk membuang';
+});
+['pointerup','pointercancel'].forEach(t=>addEventListener(t,e=>{
+ if(!drag||e.pointerId!==drag.pid)return;
+ const d=drag,was=d.on,drop=t==='pointerup'&&was&&ui==='tas'&&outTas(e.clientX,e.clientY);
+ dragEnd();
+ if(was){noClick=true;setTimeout(()=>noClick=false,60)}
+ if(drop)buang(d.id);else if(was&&ui==='tas')renderTas();
+}));
+addEventListener('blur',dragEnd);
 
 /* ---------- Touch ---------- */
 const jb=$('#joy'),kn=$('#knob');
