@@ -38,9 +38,14 @@ Di GitHub: Settings → Pages → Build and deployment → Deploy from a branch 
 - Lompat: Spasi atau W
 - Serang: J
 - Makan: 1 · Minum: 2
+- Masuk pintu Toko/Serikat: E atau tombol "Masuk" yang muncul di dekat pintu
 - Tas: Tab atau I
 - Jeda: Esc
 - HP landscape: joystick horizontal, Serang, Lompat, Makan, Minum
+
+## Pintu di Kota
+- Toko (x=200) dan Serikat (x=700) tidak lagi terbuka otomatis saat dilewati. Di dekat pintu muncul tombol "Masuk" (juga tombol E). Logika: `doorNear` di `edges()` dan `enterDoor()` di `js/core.js`.
+- Tidak ada pintu keluar kota. Berjalan ke tepi kanan kota langsung masuk Hutan (tanpa konfirmasi).
 
 ## Menambah stage baru
 Saat ini Stage 1 dibangun langsung di kode:
@@ -50,6 +55,23 @@ Saat ini Stage 1 dibangun langsung di kode:
 - Musuh per area: `spawnE()` dan `EN` di `js/core.js`
 
 Untuk Stage 2 dan seterusnya, disarankan memindahkan data level ke file terpisah (misalnya `js/stages/stage2.js`) sebelum menambah area baru. Refactor ini belum dikerjakan.
+
+## Drop, senjata, dan peti
+- Koin: pasti didapat setiap musuh mati, jumlahnya acak sesuai `EN.g` (rentang per jenis musuh).
+- Makanan: 30% per musuh (`killEn`). Senjata: peluang `DROP` (saat ini 15%).
+- Senjata: `WEP` (rentang damage dan peluang miss per tier). Setelah kalah, hanya senjata Legend yang tetap ada di tas. Tas berisi 18 slot dan item yang masuk saat penuh akan hilang.
+- Isi peti boss: `CHEST` di `js/core.js`, dengan jumlah item per tier untuk tiap stage.
+- HP musuh: `EN` di `js/core.js`. HP boss: `setupLevels()`.
+
+## Membuang item dari Tas
+- Seret slot item atau senjata keluar dari panel penyimpanan lalu lepas: item hilang permanen (satu stack penuh untuk makanan/minuman). Panel dan item berubah merah saat berada di zona buang.
+- Senjata terakhir tidak bisa dibuang. Kalau senjata aktif dibuang, senjata dengan damage rata-rata tertinggi yang tersisa otomatis dipasang.
+- Logika: `buang()` di `js/render-ui.js`, drag pointer (mouse dan sentuh) di `js/main.js`, gaya `.ghost` di `css/style.css`.
+
+## Level, XP, dan spawn
+- XP per monster: `xp` di `EN` (js/core.js). Boss memberi 50 XP. Kebutuhan XP per level: `need()` (20 × level sekarang).
+- Spawn: 1 monster tiap 6 detik per area, maksimal 10 monster hidup per area (`spawnNear`). Tipe yang paling sedikit didahulukan.
+- Laporan petualangan tampil di Serikat dan direset setelah dibaca.
 
 ## Catatan
 - Aset sprite, ikon, dan scene berasal dari paket acuan UI/UX (digambar dengan kode). Boleh dipakai sebagai placeholder.
